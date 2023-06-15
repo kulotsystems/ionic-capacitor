@@ -34,7 +34,7 @@
                 </ion-grid>
 
                 <!-- Take Photo Button -->
-                <ion-fab vertical="bottom" horizontal="center" slot="fixed" @click="takePhoto">
+                <ion-fab vertical="bottom" horizontal="center" slot="fixed" @click="takePhoto" style="position: fixed">
                     <ion-fab-button color="danger">
                         <ion-icon :icon="camera"/>
                     </ion-fab-button>
