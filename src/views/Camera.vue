@@ -50,46 +50,115 @@
     import {
         IonBackButton,
         IonButtons,
+        IonCol,
         IonContent,
-        IonHeader,
-        IonPage,
-        IonTitle,
-        IonToolbar,
         IonFab,
         IonFabButton,
-        IonIcon,
         IonGrid,
+        IonHeader,
+        IonIcon,
+        IonImg,
+        IonPage,
         IonRow,
-        IonCol,
-        IonImg
+        IonTitle,
+        IonToolbar
     } from '@ionic/vue';
+    import { onMounted } from 'vue';
     import { useStore } from "vuex";
-    import { camera, trash, close } from 'ionicons/icons';
-    import { Camera, CameraResultType } from '@capacitor/camera';
-    import { PhotoType } from "@/types/Camera.type";
+    import { camera } from 'ionicons/icons';
+    import { Camera, CameraResultType, Photo } from '@capacitor/camera';
+    import { Directory, Filesystem } from '@capacitor/filesystem';
+    import { Storage } from '@ionic/storage';
+    import { PhotoArrayType, PhotoType } from "@/types/Camera.type";
 
     // hooks
     const store = useStore();
+
+    // constants
+    const PHOTO_STORAGE = 'photos';
 
     // takePhoto method
     const takePhoto = async () => {
         // take photo using Camera
         const cameraPhoto = await Camera.getPhoto({
             quality: 100,
-            allowEditing: true,
+            allowEditing: false,
             resultType: CameraResultType.Uri
         });
 
-        // initialize fileName and savedFileImage
+        // initialize fileName
         const fileName = `${new Date().getTime()}.jpeg`;
-        const savedFileImage: PhotoType = {
-            filepath: fileName,
-            webviewPath: cameraPhoto.webPath
-        };
+
+        // save the photo
+        const savedFileImage: PhotoType = await savePhoto(cameraPhoto, fileName);
 
         // prepend savedFileImage to photos
         store.commit('prependCameraPhoto', savedFileImage);
+
+        // cache photos
+        await cachePhotos();
     };
+
+    // helper: convertBlobToBase64
+    const convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+        reader.readAsDataURL(blob);
+    });
+
+    // savePhoto method
+    const savePhoto = async (photo: Photo, fileName: string): Promise<PhotoType> => {
+        let base64Data: string;
+
+        const response = await fetch(photo.webPath!);
+        const blob = await response.blob();
+        base64Data = await convertBlobToBase64(blob) as string;
+
+        const savedFile = await Filesystem.writeFile({
+            path: fileName,
+            data: base64Data,
+            directory: Directory.Data
+        });
+
+        return {
+            filepath: fileName,
+            webviewPath: photo.webPath
+        }
+    };
+
+    // cachePhotos method
+    const cachePhotos = async () => {
+        const storage = new Storage();
+        await storage.create();
+        await storage.set(PHOTO_STORAGE, JSON.stringify(store.state.Camera.photos));
+    };
+
+    // loadSavedPhotos method
+    const loadSavedPhotos = async () => {
+        const storage = new Storage();
+        await storage.create();
+        const photoList = await storage.get(PHOTO_STORAGE);
+        const photosInStorage: PhotoArrayType = photoList ? JSON.parse(photoList) : [];
+
+        for(const photo of photosInStorage) {
+            const file = await Filesystem.readFile({
+                path: photo.filepath,
+                directory: Directory.Data
+            });
+
+            photo.webviewPath = `data:image/jpeg;base64,${file.data}`;
+            store.commit('appendCameraPhoto', photo);
+        }
+    };
+
+    // lifecycle hooks
+    onMounted(async () => {
+        store.commit('clearCameraPhotos');
+        await loadSavedPhotos();
+    });
 </script>
 
 
