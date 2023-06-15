@@ -75,12 +75,12 @@
         IonToolbar,
         onIonViewDidEnter
     } from '@ionic/vue';
-    import {useStore} from "vuex";
-    import {camera, trash, close} from 'ionicons/icons';
-    import {Camera, CameraResultType, Photo} from '@capacitor/camera';
-    import {Directory, Filesystem} from '@capacitor/filesystem';
-    import {Storage} from '@ionic/storage';
-    import {PhotoArrayType, PhotoType} from "@/types/Camera.type";
+    import { useStore } from "vuex";
+    import { camera, trash, close } from 'ionicons/icons';
+    import { Camera, CameraResultType, Photo } from '@capacitor/camera';
+    import { Directory, Filesystem } from '@capacitor/filesystem';
+    import { Storage } from '@ionic/storage';
+    import { PhotoArrayType, PhotoType } from "@/types/Camera.type";
 
     // hooks
     const store = useStore();
