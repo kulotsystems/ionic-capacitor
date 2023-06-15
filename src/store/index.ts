@@ -8,8 +8,19 @@ export default createStore({
         }
     },
     mutations: {
+        clearCameraPhotos(state) {
+            state.Camera.photos = [];
+        },
         prependCameraPhoto(state, savedFileImage: PhotoType) {
             state.Camera.photos.unshift(savedFileImage);
+        },
+        appendCameraPhoto(state, savedFileImage: PhotoType) {
+            state.Camera.photos.push(savedFileImage);
+        }
+    },
+    getters: {
+        totalCameraPhotos(state) {
+            return state.Camera.photos.length;
         }
     }
 });
