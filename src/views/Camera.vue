@@ -26,16 +26,28 @@
                             :key="photo.filepath"
                             size="6"
                         >
-                            <template v-if="photo.webviewPath">
-                                <ion-img :src="photo.webviewPath"/>
-                            </template>
+                            <div class="photo-container">
+                                <template v-if="photo.webviewPath">
+                                    <ion-img :src="photo.webviewPath"/>
+                                </template>
+                                <ion-button
+                                    color="danger"
+                                    expand="block"
+                                    size="small"
+                                    fill="clear"
+                                    @click="showActionSheet(photo)"
+                                    class="btn-delete"
+                                >
+                                    <ion-icon :icon="trash" size="small"/>
+                                </ion-button>
+                            </div>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
 
                 <!-- Take Photo Button -->
                 <ion-fab vertical="bottom" horizontal="center" slot="fixed" @click="takePhoto" style="position: fixed">
-                    <ion-fab-button color="danger">
+                    <ion-fab-button color="light">
                         <ion-icon :icon="camera"/>
                     </ion-fab-button>
                 </ion-fab>
@@ -48,8 +60,10 @@
 <script setup lang="ts">
     // Reference: https://www.youtube.com/watch?v=3Cy5W_fpQSA
     import {
+        actionSheetController,
         IonBackButton,
         IonButtons,
+        IonButton,
         IonCol,
         IonContent,
         IonFab,
@@ -64,12 +78,12 @@
         IonToolbar,
         onIonViewDidEnter
     } from '@ionic/vue';
-    import { useStore } from "vuex";
-    import { camera } from 'ionicons/icons';
-    import { Camera, CameraResultType, Photo } from '@capacitor/camera';
-    import { Directory, Filesystem } from '@capacitor/filesystem';
-    import { Storage } from '@ionic/storage';
-    import { PhotoArrayType, PhotoType } from "@/types/Camera.type";
+    import {useStore} from "vuex";
+    import {camera, trash, close} from 'ionicons/icons';
+    import {Camera, CameraResultType, Photo} from '@capacitor/camera';
+    import {Directory, Filesystem} from '@capacitor/filesystem';
+    import {Storage} from '@ionic/storage';
+    import {PhotoArrayType, PhotoType} from "@/types/Camera.type";
 
     // hooks
     const store = useStore();
@@ -129,6 +143,48 @@
         }
     };
 
+    const deletePhoto = async (photo: PhotoType) => {
+        // delete photo from array
+        store.commit('deleteCameraPhoto', photo);
+
+        // delete photo from file system
+        const filename = photo.filepath.substring(photo.filepath.lastIndexOf('/') + 1);
+        await Filesystem.deleteFile({
+            path: filename,
+            directory: Directory.Data
+        });
+
+        // cache photos
+        await cachePhotos();
+    };
+
+    // showActionSheet method
+    const showActionSheet = async (photo: PhotoType) => {
+        const actionSheet = await actionSheetController.create({
+            header: 'Photo',
+            buttons: [
+                {
+                    text: 'Delete',
+                    role: 'destructive',
+                    icon: trash,
+                    handler: () => {
+                        deletePhoto(photo);
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    icon: close,
+                    handler: () => {
+                        // do nothing
+                    }
+                }
+            ]
+        });
+
+        await actionSheet.present();
+    };
+
     // cachePhotos method
     const cachePhotos = async () => {
         const storage = new Storage();
@@ -163,5 +219,16 @@
 
 
 <style scoped>
+    .photo-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+    }
 
+    .photo-container > .btn-delete {
+        position: absolute;
+        top: -5px;
+        right: -10px;
+        z-index: 1;
+    }
 </style>
