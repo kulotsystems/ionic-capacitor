@@ -22,7 +22,7 @@
                 <ion-grid>
                     <ion-row>
                         <ion-col
-                            v-for="photo in photos"
+                            v-for="photo in store.state.Camera.photos"
                             :key="photo.filepath"
                             size="6"
                         >
@@ -44,6 +44,7 @@
     </ion-page>
 </template>
 
+
 <script setup lang="ts">
     // Reference: https://www.youtube.com/watch?v=3Cy5W_fpQSA
     import {
@@ -62,24 +63,19 @@
         IonCol,
         IonImg
     } from '@ionic/vue';
-    import { ref } from 'vue';
+    import { useStore } from "vuex";
     import { camera, trash, close } from 'ionicons/icons';
     import { Camera, CameraResultType } from '@capacitor/camera';
+    import { PhotoType } from "@/types/Camera.type";
 
-    // type of photo data
-    type PhotoType = {
-        filepath: string,
-        webviewPath: string | undefined
-    }
-
-    // photos array
-    const photos = ref<PhotoType[]>([]);
+    // hooks
+    const store = useStore();
 
     // takePhoto method
     const takePhoto = async () => {
         // take photo using Camera
         const cameraPhoto = await Camera.getPhoto({
-            quality: 90,
+            quality: 100,
             allowEditing: true,
             resultType: CameraResultType.Uri
         });
@@ -92,7 +88,7 @@
         };
 
         // prepend savedFileImage to photos
-        photos.value = [savedFileImage, ...photos.value];
+        store.commit('prependCameraPhoto', savedFileImage);
     };
 </script>
 
