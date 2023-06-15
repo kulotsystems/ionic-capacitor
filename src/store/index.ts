@@ -17,5 +17,10 @@ export default createStore({
         appendCameraPhoto(state, savedFileImage: PhotoType) {
             state.Camera.photos.push(savedFileImage);
         }
+    },
+    getters: {
+        totalCameraPhotos(state) {
+            return state.Camera.photos.length;
+        }
     }
 });

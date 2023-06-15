@@ -156,8 +156,8 @@
 
     // lifecycle hooks
     onMounted(async () => {
-        store.commit('clearCameraPhotos');
-        await loadSavedPhotos();
+        if(store.getters['totalCameraPhotos'] <= 0)
+            await loadSavedPhotos();
     });
 </script>
 
