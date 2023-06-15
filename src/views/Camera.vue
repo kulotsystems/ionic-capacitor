@@ -61,9 +61,9 @@
         IonPage,
         IonRow,
         IonTitle,
-        IonToolbar
+        IonToolbar,
+        onIonViewDidEnter
     } from '@ionic/vue';
-    import { onMounted } from 'vue';
     import { useStore } from "vuex";
     import { camera } from 'ionicons/icons';
     import { Camera, CameraResultType, Photo } from '@capacitor/camera';
@@ -155,7 +155,7 @@
     };
 
     // lifecycle hooks
-    onMounted(async () => {
+    onIonViewDidEnter(async () => {
         if(store.getters['totalCameraPhotos'] <= 0)
             await loadSavedPhotos();
     });
