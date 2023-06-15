@@ -16,6 +16,9 @@ export default createStore({
         },
         appendCameraPhoto(state, savedFileImage: PhotoType) {
             state.Camera.photos.push(savedFileImage);
+        },
+        deleteCameraPhoto(state, photo: PhotoType) {
+            state.Camera.photos = state.Camera.photos.filter(p => p.filepath !== photo.filepath);
         }
     },
     getters: {
