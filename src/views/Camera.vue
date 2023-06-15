@@ -17,7 +17,7 @@
             </ion-header>
 
             <!-- Camera -->
-            <div class="ion-padding-start ion-padding-end">
+            <div>
                 <!-- Gallery -->
                 <ion-grid>
                     <ion-row>
@@ -30,16 +30,13 @@
                                 <template v-if="photo.webviewPath">
                                     <ion-img :src="photo.webviewPath"/>
                                 </template>
-                                <ion-button
-                                    color="danger"
-                                    expand="block"
+                                <ion-icon
+                                    :icon="trash"
                                     size="small"
-                                    fill="clear"
+                                    color="danger"
                                     @click="showActionSheet(photo)"
                                     class="btn-delete"
-                                >
-                                    <ion-icon :icon="trash" size="small"/>
-                                </ion-button>
+                                />
                             </div>
                         </ion-col>
                     </ion-row>
@@ -227,8 +224,8 @@
 
     .photo-container > .btn-delete {
         position: absolute;
-        top: -5px;
-        right: -10px;
+        top: 2px;
+        right: 1px;
         z-index: 1;
     }
 </style>
