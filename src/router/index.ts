@@ -16,6 +16,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/camera',
         name: 'Camera',
         component: () => import('../views/Camera.vue')
+    },
+    {
+        path: '/haptics',
+        name: 'Haptics',
+        component: () => import('../views/Haptics.vue')
     }
 ];
 
