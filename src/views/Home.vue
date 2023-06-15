@@ -50,6 +50,7 @@
     } from '@ionic/vue';
 
     const views = [
+        'Browser',
         'Camera',
         'Haptics'
     ];

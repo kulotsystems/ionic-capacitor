@@ -21,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/haptics',
         name: 'Haptics',
         component: () => import('../views/Haptics.vue')
+    },
+    {
+        path: '/browser',
+        name: 'Browser',
+        component: () => import('../views/Browser.vue')
     }
 ];
 
