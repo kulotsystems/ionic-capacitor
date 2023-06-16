@@ -26,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/browser',
         name: 'Browser',
         component: () => import('../views/Browser.vue')
+    },
+    {
+        path: '/status-bar',
+        name: 'StatusBar',
+        component: () => import('../views/StatusBar.vue')
     }
 ];
 

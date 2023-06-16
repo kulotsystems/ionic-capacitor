@@ -52,7 +52,8 @@
     const views = [
         'Browser',
         'Camera',
-        'Haptics'
+        'Haptics',
+        'StatusBar'
     ];
 </script>
 
