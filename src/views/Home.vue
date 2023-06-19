@@ -53,7 +53,8 @@
         'Browser',
         'Camera',
         'Haptics',
-        'StatusBar'
+        'StatusBar',
+        'AppLauncher'
     ];
 </script>
 
