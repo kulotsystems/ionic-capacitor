@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/status-bar',
         name: 'StatusBar',
         component: () => import('../views/StatusBar.vue')
+    },
+    {
+        path: '/app-launcher',
+        name: 'AppLauncher',
+        component: () => import('../views/AppLauncher.vue')
     }
 ];
 
