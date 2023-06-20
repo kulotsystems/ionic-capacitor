@@ -36,6 +36,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/app-launcher',
         name: 'AppLauncher',
         component: () => import('../views/AppLauncher.vue')
+    },
+    {
+        path: '/device',
+        name: 'Device',
+        component: () => import('../views/Device.vue')
     }
 ];
 
