@@ -50,11 +50,12 @@
     } from '@ionic/vue';
 
     const views = [
+        'AppLauncher',
         'Browser',
         'Camera',
+        'Device',
         'Haptics',
-        'StatusBar',
-        'AppLauncher'
+        'StatusBar'
     ];
 </script>
 
