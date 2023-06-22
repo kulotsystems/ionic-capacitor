@@ -41,6 +41,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/device',
         name: 'Device',
         component: () => import('../views/Device.vue')
+    },
+    {
+        path: '/dialog',
+        name: 'Dialog',
+        component: () => import('../views/Dialog.vue')
     }
 ];
 
