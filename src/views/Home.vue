@@ -54,6 +54,7 @@
         'Browser',
         'Camera',
         'Device',
+        'Dialog',
         'Haptics',
         'StatusBar'
     ];
